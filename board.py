@@ -1,6 +1,4 @@
 from pyclbr import Function
-
-from sklearn import neighbors
 from node import Node
 from status import *
 import math
@@ -95,8 +93,10 @@ class Board:
 
         # Perform algorithm while we are having nodes in the open list.
         while open_list:
+            #if update_callback:
+            #    update_callback()
             if update_callback:
-                update_callback()
+               update_callback()
 
             # Find node with minimum f cost.
             node = min(open_list, key=lambda x: x.f)
@@ -129,6 +129,8 @@ class Board:
             open_list.remove(node)
             closed_list.add(node)
             node.status = CLOSED if node.status != START else START
+
+
         
 
             

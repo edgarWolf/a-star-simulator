@@ -20,6 +20,16 @@ BLUE = (0,191,255)
 YELLOW = (255, 255 , 0)
 ORANGE = (255,165,0)
 
+COLOR_MAPPING = {
+    NOT_VISITED: WHITE,
+    START: GREEN,
+    TARGET: RED,
+    OBSTACLE: BLACK,
+    OPEN: BLUE,
+    CLOSED: YELLOW,
+    PATH: ORANGE
+}
+
 class Gui:
     def __init__(self, board: Board) -> None:
         pygame.init()
@@ -38,20 +48,8 @@ class Gui:
                 rect = pygame.Rect(i, j, BLOCKSIZE_X, BLOCKSIZE_Y)
                 pygame.draw.rect(self.screen, BLACK, rect, 1) 
                 node = self.board.board[i // BLOCKSIZE_Y][j // BLOCKSIZE_X]
-                if node.status == NOT_VISITED:
-                    pygame.draw.rect(self.screen, WHITE, pygame.Rect(i + 1, j + 1, BLOCKSIZE_X - 2, BLOCKSIZE_Y - 2))
-                if node.status == START:
-                    pygame.draw.rect(self.screen, GREEN, pygame.Rect(i + 1, j + 1, BLOCKSIZE_X - 2, BLOCKSIZE_Y - 2))
-                elif node.status == TARGET:
-                    pygame.draw.rect(self.screen, RED, pygame.Rect(i + 1, j + 1, BLOCKSIZE_X - 2, BLOCKSIZE_Y - 2))
-                elif node.status == OBSTACLE:
-                    pygame.draw.rect(self.screen, BLACK, pygame.Rect(i + 1, j + 1, BLOCKSIZE_X - 2, BLOCKSIZE_Y - 2))
-                elif node.status == OPEN:
-                    pygame.draw.rect(self.screen, BLUE, pygame.Rect(i + 1, j + 1, BLOCKSIZE_X - 2, BLOCKSIZE_Y - 2))
-                elif node.status == CLOSED:
-                    pygame.draw.rect(self.screen, YELLOW, pygame.Rect(i + 1, j + 1, BLOCKSIZE_X - 2, BLOCKSIZE_Y - 2))
-                elif node.status == PATH:
-                    pygame.draw.rect(self.screen, ORANGE, pygame.Rect(i + 1, j + 1, BLOCKSIZE_X - 2, BLOCKSIZE_Y - 2))
+                pygame.draw.rect(self.screen, COLOR_MAPPING[node.status], pygame.Rect(i + 1, j + 1, BLOCKSIZE_X - 2, BLOCKSIZE_Y - 2))
+
 
     def _redraw_grid(self):
         self._draw_grid()
