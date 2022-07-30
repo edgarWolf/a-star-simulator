@@ -92,6 +92,9 @@ class Gui:
                     self.board.expand(update_callback=self._redraw_grid)
                     self.is_running = False
                     return
+            
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                self.board.reset_found_path()
 
             # Reset
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:

@@ -19,6 +19,12 @@ class Board:
     def reset(self) -> None:
         self.init_board()
 
+    def reset_found_path(self) -> None:
+        for row in self.board:
+            for node in row:
+                if node.status == CLOSED or node.status == OPEN or node.status == PATH:
+                    node.status = NOT_VISITED
+
     def distance(self, start: Node, target: Node) -> int:
         return abs(target.x - start.x) + abs(target.y - start.y)
 
