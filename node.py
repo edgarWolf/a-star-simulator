@@ -11,3 +11,7 @@ class Node:
     def __repr__(self) -> str:
         return f"({self.x}, {self.y}) - {self.status}"
 
+    def __lt__(self, other):
+        return self.f < other.f
+
+

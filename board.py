@@ -1,5 +1,6 @@
 from pyclbr import Function
 from node import Node
+from queue import PriorityQueue
 from status import *
 import math
 
@@ -94,19 +95,20 @@ class Board:
     def expand(self, update_callback=None):
 
         # Initialize open list with start node and closed list with empty set.
-        open_list = {self.start}
+        # Use priority queue for logarithmic time complexity for access.
+        open_list = PriorityQueue()
+        open_list.put(self.start)
         closed_list = set()
 
         # Perform algorithm while we are having nodes in the open list.
-        while open_list:
+        while not open_list.empty():
             #if update_callback:
             #    update_callback()
             if update_callback:
                update_callback()
 
             # Find node with minimum f cost.
-            node = min(open_list, key=lambda x: x.f)
-            
+            node = open_list.get()
             # Minimum node is target node --> Path found
             if node == self.target:
                 # Reconstruct path
@@ -128,11 +130,10 @@ class Board:
                     if cost < neighbor.f:
                         neighbor.f = cost
                         neighbor.predecessor = node
-                    neighbor.status = OPEN
-                    open_list.add(neighbor)
+                        neighbor.status = OPEN
+                        open_list.put(neighbor)
             
-            # Remove current node from open list, add to closed list.
-            open_list.remove(node)
+            # Add to closed list.
             closed_list.add(node)
             node.status = CLOSED if node.status != START else START
 
