@@ -1,6 +1,8 @@
 # a-star-simulator
 A simple A*-algorithm simluator written in python using pygame.
 
+![](./Example.gif)
+
 ## Requirements
 You will need to have installed python3 algonside pygame.
 
