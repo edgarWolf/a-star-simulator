@@ -125,10 +125,11 @@ class Board:
             # Update costs for neighbors
             for neighbor in neighbors:
                 if neighbor not in closed_list:
-                    neighbor.g = node.g + self.distance(node, neighbor)
-                    cost = neighbor.g + neighbor.h
-                    if cost < neighbor.f:
-                        neighbor.f = cost
+                    g = node.g + self.distance(node, neighbor)
+                    f = g + neighbor.h
+                    if f < neighbor.f:
+                        neighbor.g = g
+                        neighbor.f = f
                         neighbor.predecessor = node
                         neighbor.status = OPEN
                         open_list.put(neighbor)
