@@ -1,6 +1,6 @@
 from pyclbr import Function
+from algorithm import Algorithm
 from node import Node
-from queue import PriorityQueue
 from status import *
 import math
 
@@ -11,6 +11,7 @@ class Board:
     def __init__(self, heuristic: Function) -> None:
         self.heuristic = heuristic
         self.init_board()
+        self.algorithm = Algorithm()
     
     def init_board(self) -> None:
         self.board = [ [Node(i, j, NOT_VISITED) for j in range(NUM_BLOCKS_X)] for i in range(NUM_BLOCKS_Y) ]
@@ -26,9 +27,6 @@ class Board:
                 if node.status == CLOSED or node.status == OPEN or node.status == PATH:
                     node.status = NOT_VISITED
 
-    def distance(self, start: Node, target: Node) -> int:
-        return abs(target.x - start.x) + abs(target.y - start.y)
-
     def set_target(self, row: int, col: int) -> None:
         if not self.target:
             self.board[row][col].status = TARGET
@@ -37,6 +35,7 @@ class Board:
         elif self.board[row][col].status == TARGET and self.target:
             self.board[row][col].status = NOT_VISITED
             self.target = None
+        self.algorithm.set_target(self.target)
 
     def set_obstacle(self, row: int, col: int) -> None:
         node = self.board[row][col]
@@ -53,20 +52,7 @@ class Board:
         elif self.board[row][col].status == START and self.start:
             self.board[row][col].status = NOT_VISITED
             self.start = None
-    
-    def caluclate_heuristics(self) -> None:
-        for row in self.board:
-            for node in row:
-                if node == self.target:
-                    node.h = 0
-                    node.g = math.inf
-                elif node == self.start:
-                    node.h = self.heuristic(node, self.target)
-                    node.g = 0
-                elif node.status != OBSTACLE:
-                    node.h = self.heuristic(node, self.target)
-                    node.g = math.inf
-                node.f = node.h + node.g
+        self.algorithm.set_start(self.start)
 
     def get_neighbors(self, node):
         neighbors = []
@@ -94,49 +80,15 @@ class Board:
 
     def expand(self, update_callback=None):
 
-        # Initialize open list with start node and closed list with empty set.
-        # Use priority queue for logarithmic time complexity for access.
-        open_list = PriorityQueue()
-        open_list.put(self.start)
-        closed_list = set()
+        self.algorithm.initialize(self)
 
-        # Perform algorithm while we are having nodes in the open list.
-        while not open_list.empty():
-            #if update_callback:
-            #    update_callback()
+        while not self.algorithm.is_finished():
             if update_callback:
                update_callback()
-
-            # Find node with minimum f cost.
-            node = open_list.get()
-            # Minimum node is target node --> Path found
-            if node == self.target:
-                # Reconstruct path
-                node.status = TARGET
-                predecessor = node.predecessor
-                predecessor.status = PATH
-                while predecessor.predecessor:
-                    predecessor = predecessor.predecessor
-                    predecessor.status = PATH if predecessor.status != START and predecessor.status != TARGET else predecessor.status
-                return
-
-            # Expand
-            neighbors = self.get_neighbors(node)
-            # Update costs for neighbors
-            for neighbor in neighbors:
-                if neighbor not in closed_list:
-                    g = node.g + self.distance(node, neighbor)
-                    f = g + neighbor.h
-                    if f < neighbor.f:
-                        neighbor.g = g
-                        neighbor.f = f
-                        neighbor.predecessor = node
-                        neighbor.status = OPEN
-                        open_list.put(neighbor)
+            self.algorithm.step(self)
             
-            # Add to closed list.
-            closed_list.add(node)
-            node.status = CLOSED if node.status != START else START
+        self.algorithm.reset()
+                
 
 
         
