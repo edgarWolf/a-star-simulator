@@ -2,7 +2,7 @@ from pyclbr import Function
 from algorithm import Algorithm
 from node import Node
 from status import *
-import math
+import random
 
 NUM_BLOCKS_X = 50
 NUM_BLOCKS_Y = 50
@@ -14,7 +14,7 @@ class Board:
         self.algorithm = Algorithm()
     
     def init_board(self) -> None:
-        self.board = [ [Node(i, j, NOT_VISITED) for j in range(NUM_BLOCKS_X)] for i in range(NUM_BLOCKS_Y) ]
+        self.board = [ [self._create_initial_node(i, j) for j in range(NUM_BLOCKS_X)] for i in range(NUM_BLOCKS_Y) ]
         self.target = None
         self.start = None
     
@@ -53,6 +53,9 @@ class Board:
             self.board[row][col].status = NOT_VISITED
             self.start = None
         self.algorithm.set_start(self.start)
+    
+    def _create_initial_node(self, i: int, j: int):
+        return Node(i, j, OBSTACLE) if random.randint(0, 3) == 0 else Node(i, j, NOT_VISITED) 
 
     def get_neighbors(self, node):
         neighbors = []
