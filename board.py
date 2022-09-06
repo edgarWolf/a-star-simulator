@@ -56,25 +56,52 @@ class Board:
 
     def get_neighbors(self, node):
         neighbors = []
+
+        # Left
         if node.x - 1 >= 0:
             neighbor = self.board[node.x - 1][node.y]
             if neighbor.status != OBSTACLE:
                 neighbors.append(neighbor)
 
+        # Right
         if node.x + 1 < NUM_BLOCKS_X:
             neighbor = self.board[node.x + 1][node.y]
             if neighbor.status != OBSTACLE:
                 neighbors.append(neighbor)
 
+        # Upper
         if node.y - 1 >= 0:
             neighbor = self.board[node.x][node.y - 1]
             if neighbor.status != OBSTACLE:
                 neighbors.append(neighbor)
-
+        
+        # Lower
         if node.y + 1 < NUM_BLOCKS_Y:
             neighbor = self.board[node.x][node.y + 1]
             if neighbor.status != OBSTACLE:
                 neighbors.append(neighbor)
+
+        # Diagonal upper left
+        if node.y - 1 >= 0 and node.x - 1 >= 0:
+            neighbor = self.board[node.x - 1][node.y - 1]
+            neighbors.append(neighbor)
+        
+        # Diagonal upper right
+        if node.y - 1 >= 0 and node.x + 1 < NUM_BLOCKS_X:
+            neighbor = self.board[node.x + 1][node.y - 1]
+            neighbors.append(neighbor)
+
+        # Diagonal lower left
+        if node.y + 1 < NUM_BLOCKS_Y and node.x - 1 >= 0:
+            neighbor = self.board[node.x - 1][node.y + 1]
+            neighbors.append(neighbor)
+
+        # Diagonal lower right
+        if node.y + 1 < NUM_BLOCKS_Y and node.x + 1 < NUM_BLOCKS_X:
+            neighbor = self.board[node.x + 1][node.y + 1]
+            neighbors.append(neighbor)
+
+
 
         return neighbors
 

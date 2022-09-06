@@ -92,12 +92,11 @@ class Gui:
                     self.is_running = False
                     return
             
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_b and not self.is_running:
                 self.board.reset_found_path()
 
             # Reset
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-                self.is_running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_r and not self.is_running:
                 self.board.reset()
         pygame.display.update()
 

@@ -12,6 +12,10 @@ class Algorithm:
     def distance(self, start: Node, target: Node) -> int:
         return abs(target.x - start.x) + abs(target.y - start.y)
     
+    def equal_distance(self) -> int:
+        # Consider equal distance for each neighbor.
+        return 1
+    
     def set_start(self, start) -> None:
         self.start = start
 
@@ -67,15 +71,19 @@ class Algorithm:
             neighbors = board.get_neighbors(node)
             for neighbor in neighbors:
                 if neighbor not in self.closed:
-                    g = node.g + self.distance(node, neighbor)
-                    f = g + neighbor.h
+
+                    # You may call here a other distance method.
+                    g = node.g + self.equal_distance()
+                    
                     # We have found one neighbor with less cost.
-                    if f < neighbor.f:
+                    if g < neighbor.g:
+                        f = g + neighbor.h
                         neighbor.g = g
                         neighbor.f = f
                         neighbor.predecessor = node
                         neighbor.status = OPEN
-                        self.open.put(neighbor)
+                        if neighbor not in self.open.queue:
+                            self.open.put(neighbor)
             
             # Add to closed list.
             self.closed.add(node)
